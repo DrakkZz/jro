@@ -113,6 +113,7 @@ The project uses automated tests to verify the lexer, parser, encoder, decoder, 
 
 📁 Project Structure
 
+```text
 jro/
 ├── jro/
 │   ├── __init__.py
@@ -131,6 +132,7 @@ jro/
 ├── .gitignore
 ├── LICENSE
 └── README.md
+```
 
 ---
 
