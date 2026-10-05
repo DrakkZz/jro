@@ -1,16 +1,36 @@
 JRO
 
-JRO is a JSON-inspired data format and Python library.
+JRO is a JSON-inspired data format and Python library designed to be simple, readable, and extensible.
 
-It aims to keep the simplicity of JSON while providing room for its own syntax, features, and rules.
+«JRO — JSON V2»
 
-Status
+""Python" (https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)" (https://www.python.org/)
+""License" (https://img.shields.io/badge/License-MIT-green)" (LICENSE)
+""Status" (https://img.shields.io/badge/Status-Work%20in%20Progress-orange)" (#status)
 
-🚧 Work in progress.
+---
 
-Current version: 0.2.0
+📌 Status
 
-Example
+🚧 JRO is currently under development.
+
+Current version: "0.2.0"
+
+The project already has:
+
+- ✅ Custom lexer
+- ✅ Custom parser
+- ✅ Encoder
+- ✅ Decoder
+- ✅ "dumps()" / "loads()"
+- ✅ Comment support
+- ✅ Automated tests
+- ✅ Python integration
+- ✅ GitHub repository
+
+---
+
+✨ Example
 
 {
     "name": "DrakkZ",
@@ -23,7 +43,11 @@ Example
     "nothing": null
 }
 
-Python
+JRO keeps the familiar structure of JSON while leaving room for features of its own.
+
+---
+
+🐍 Python
 
 import jro
 
@@ -36,32 +60,95 @@ data = {
 }
 
 text = jro.dumps(data, indent=4)
+
+print(text)
+
 decoded = jro.loads(text)
 
 print(decoded == data)
 
-Goals
+Output:
 
-- Simple syntax.
-- Natural integration with Python data structures.
-- Custom lexer and parser.
-- Custom encoder and decoder.
-- Comment support.
-- Automated tests.
-- A data format with its own identity.
-
-Development
-
-JRO is written in Python.
-
-Run the test suite with:
-
-pytest
-
-License
-
-This project is licensed under the MIT License.
+True
 
 ---
 
-JRO — JSON V2
+💬 Comments
+
+JRO supports single-line comments:
+
+{
+    // User information
+    "name": "DrakkZ",
+
+    "age": 10
+}
+
+---
+
+🎯 Goals
+
+JRO aims to provide:
+
+- 🧩 A simple data format
+- 🐍 Natural Python integration
+- 🔍 Its own lexer and parser
+- 🔄 Custom encoding and decoding
+- 💬 Comment support
+- 🧪 Automated testing
+- 📦 A clean Python API
+- 🚀 Room for future syntax and features
+
+---
+
+🧪 Testing
+
+Install the development dependencies and run:
+
+pytest
+
+The project uses automated tests to verify the lexer, parser, encoder, decoder, errors, comments, and round-trip behavior.
+
+---
+
+📁 Project Structure
+
+jro/
+├── jro/
+│   ├── __init__.py
+│   ├── lexer.py
+│   ├── parser.py
+│   ├── encoder.py
+│   └── decoder.py
+│
+├── tests/
+│   ├── conftest.py
+│   ├── test_basic.py
+│   ├── test_comments.py
+│   ├── test_errors.py
+│   └── test_lexer.py
+│
+├── .gitignore
+├── LICENSE
+└── README.md
+
+---
+
+📜 License
+
+JRO is released under the MIT License.
+
+See ""LICENSE"" (LICENSE) for the full license text.
+
+---
+
+👤 Author
+
+Created and maintained by DrakkZz.
+
+---
+
+<p align="center">
+  <b>JRO</b><br>
+  A small data format with big plans.
+</p>
