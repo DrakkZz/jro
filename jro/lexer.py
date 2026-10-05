@@ -10,10 +10,9 @@ JSON V2
 
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 from enum import Enum, auto
-
-import json
 
 
 class TokenType(Enum):
@@ -57,17 +56,14 @@ class Lexer:
         while self.position < len(self.text):
             char = self.text[self.position]
 
-            # Espaços, tabs e quebras de linha
             if char.isspace():
                 self.position += 1
                 continue
 
-            # Comentário de linha
             if char == "/" and self._peek() == "/":
                 self._skip_comment()
                 continue
 
-            # Objetos
             if char == "{":
                 self._add(TokenType.LEFT_BRACE, "{")
                 self.position += 1
@@ -78,7 +74,6 @@ class Lexer:
                 self.position += 1
                 continue
 
-            # Arrays
             if char == "[":
                 self._add(TokenType.LEFT_BRACKET, "[")
                 self.position += 1
@@ -89,7 +84,6 @@ class Lexer:
                 self.position += 1
                 continue
 
-            # Separadores
             if char == ":":
                 self._add(TokenType.COLON, ":")
                 self.position += 1
@@ -100,55 +94,36 @@ class Lexer:
                 self.position += 1
                 continue
 
-            # String
             if char == '"':
                 self._read_string()
                 continue
 
-            # Número
             if char == "-" or char.isdigit():
                 self._read_number()
                 continue
 
-            # Booleanos
             if self.text.startswith("true", self.position):
-                start = self.position
-
-                self.position += 4
-
-                self._add(
+                self._read_keyword(
+                    "true",
                     TokenType.TRUE,
                     True,
-                    start,
                 )
-
                 continue
 
             if self.text.startswith("false", self.position):
-                start = self.position
-
-                self.position += 5
-
-                self._add(
+                self._read_keyword(
+                    "false",
                     TokenType.FALSE,
                     False,
-                    start,
                 )
-
                 continue
 
-            # Null
             if self.text.startswith("null", self.position):
-                start = self.position
-
-                self.position += 4
-
-                self._add(
+                self._read_keyword(
+                    "null",
                     TokenType.NULL,
                     None,
-                    start,
                 )
-
                 continue
 
             raise LexerError(
@@ -172,13 +147,6 @@ class Lexer:
         value: object,
         position: int | None = None,
     ):
-        """
-        Adiciona um token à lista.
-
-        Quando position não é informado, utiliza a posição
-        atual do lexer.
-        """
-
         if position is None:
             position = self.position
 
@@ -191,8 +159,6 @@ class Lexer:
         )
 
     def _peek(self) -> str:
-        """Retorna o próximo caractere sem avançar."""
-
         next_position = self.position + 1
 
         if next_position >= len(self.text):
@@ -201,17 +167,42 @@ class Lexer:
         return self.text[next_position]
 
     def _skip_comment(self):
-        """Ignora um comentário de linha."""
-
         while (
             self.position < len(self.text)
             and self.text[self.position] != "\n"
         ):
             self.position += 1
 
-    def _read_string(self):
-        """Lê uma string JRO."""
+    def _read_keyword(
+        self,
+        keyword: str,
+        token_type: TokenType,
+        value: object,
+    ):
+        start = self.position
+        end = start + len(keyword)
 
+        if end < len(self.text):
+            next_char = self.text[end]
+
+            if (
+                next_char.isalnum()
+                or next_char == "_"
+            ):
+                raise LexerError(
+                    f"Palavra inválida na posição "
+                    f"{start}: {self.text[start:end + 1]!r}"
+                )
+
+        self.position = end
+
+        self._add(
+            token_type,
+            value,
+            start,
+        )
+
+    def _read_string(self):
         start = self.position
 
         self.position += 1
@@ -219,12 +210,10 @@ class Lexer:
         while self.position < len(self.text):
             char = self.text[self.position]
 
-            # Caractere escapado
             if char == "\\":
                 self.position += 2
                 continue
 
-            # Final da string
             if char == '"':
                 self.position += 1
 
@@ -252,33 +241,46 @@ class Lexer:
         )
 
     def _read_number(self):
-        """Lê um número inteiro ou decimal."""
-
         start = self.position
 
-        # Sinal negativo
         if self.text[self.position] == "-":
             self.position += 1
 
-        # Parte inteira
         while (
             self.position < len(self.text)
             and self.text[self.position].isdigit()
         ):
             self.position += 1
 
-        # Parte decimal
         if (
             self.position < len(self.text)
             and self.text[self.position] == "."
         ):
             self.position += 1
 
+            decimal_start = self.position
+
             while (
                 self.position < len(self.text)
                 and self.text[self.position].isdigit()
             ):
                 self.position += 1
+
+            if decimal_start == self.position:
+                raise LexerError(
+                    f"Número inválido na posição {start}"
+                )
+
+        if self.position < len(self.text):
+            next_char = self.text[self.position]
+
+            if (
+                next_char.isalpha()
+                or next_char == "_"
+            ):
+                raise LexerError(
+                    f"Número inválido na posição {start}"
+                )
 
         raw = self.text[start:self.position]
 
