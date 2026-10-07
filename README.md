@@ -2,7 +2,7 @@ JRO
 
 JRO is a JSON-inspired data format and Python library designed to be simple, readable, and extensible.
 
-«JRO — JSON V2»
+«JRO — JSON Reformulated Object»
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
