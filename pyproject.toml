@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "jro"
-version = "0.1.0"
-description = "JRO - JSON V2 for Python"
+version = "0.3.0"
+description = "JRO - JSON Reformulated Object for Python"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
@@ -17,7 +17,7 @@ authors = [
 keywords = [
     "jro",
     "json",
-    "json-v2",
+    "json-reformulated-object",
     "data",
     "serialization"
 ]
