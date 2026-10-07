@@ -4,9 +4,9 @@ JRO is a JSON-inspired data format and Python library designed to be simple, rea
 
 «JRO — JSON V2»
 
-""Python" (https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)" (https://www.python.org/)
-""License" (https://img.shields.io/badge/License-MIT-green)" (LICENSE)
-""Status" (https://img.shields.io/badge/Status-Work%20in%20Progress-orange)" (#status)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Work%20in%20Progress-orange)](#status)
 
 ---
 
@@ -14,7 +14,7 @@ JRO is a JSON-inspired data format and Python library designed to be simple, rea
 
 🚧 JRO is currently under development.
 
-Current version: "0.2.0"
+Current version: 0.2.0
 
 The project already has:
 
@@ -22,7 +22,7 @@ The project already has:
 - ✅ Custom parser
 - ✅ Encoder
 - ✅ Decoder
-- ✅ "dumps()" / "loads()"
+- ✅ dumps() / loads()
 - ✅ Comment support
 - ✅ Automated tests
 - ✅ Python integration
@@ -32,18 +32,16 @@ The project already has:
 
 ✨ Example
 
-```jro
 {
-"name": "DrakkZ",
-"age": 10,
-"games": [
-"Pokémon",
-"Minecraft"
-],
-"active": true,
-"nothing": null
+    "name": "DrakkZ",
+    "age": 10,
+    "games": [
+        "Pokémon",
+        "Minecraft"
+    ],
+    "active": true,
+    "nothing": null
 }
-```
 
 JRO keeps the familiar structure of JSON while leaving room for features of its own.
 
@@ -51,15 +49,14 @@ JRO keeps the familiar structure of JSON while leaving room for features of its 
 
 🐍 Python
 
-```python
 import jro
 
 data = {
-"name": "DrakkZ",
-"age": 10,
-"games": ["Pokémon", "Minecraft"],
-"active": True,
-"nothing": None,
+    "name": "DrakkZ",
+    "age": 10,
+    "games": ["Pokémon", "Minecraft"],
+    "active": True,
+    "nothing": None,
 }
 
 text = jro.dumps(data, indent=4)
@@ -69,13 +66,10 @@ print(text)
 decoded = jro.loads(text)
 
 print(decoded == data)
-```
 
 Output:
 
-```text
 True
-```
 
 ---
 
@@ -83,15 +77,12 @@ True
 
 JRO supports single-line comments:
 
-```jro
 {
-// User information
-"name": "DrakkZ",
+    // User information
+    "name": "DrakkZ",
 
-"age": 10
-
+    "age": 10
 }
-```
 
 ---
 
@@ -114,9 +105,7 @@ JRO aims to provide:
 
 Install the development dependencies and run:
 
-```bash
 pytest
-```
 
 The project uses automated tests to verify the lexer, parser, encoder, decoder, errors, comments, and round-trip behavior.
 
@@ -124,10 +113,9 @@ The project uses automated tests to verify the lexer, parser, encoder, decoder, 
 
 📁 Project Structure
 
-```text
 jro/
 ├── jro/
-│   ├── init.py
+│   ├── __init__.py
 │   ├── lexer.py
 │   ├── parser.py
 │   ├── encoder.py
@@ -143,7 +131,6 @@ jro/
 ├── .gitignore
 ├── LICENSE
 └── README.md
-```
 
 ---
 
