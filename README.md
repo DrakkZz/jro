@@ -4,9 +4,9 @@ JRO is a JSON-inspired data format and Python library designed to be simple, rea
 
 «JRO — JSON V2»
 
-""Python" (https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)" (https://www.python.org/)
-""License" (https://img.shields.io/badge/License-MIT-green)" (LICENSE)
-""Status" (https://img.shields.io/badge/Status-Work%20in%20Progress-orange)" (#status)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Work%20in%20Progress-orange)](#status)
 
 ---
 
@@ -32,6 +32,7 @@ The project already has:
 
 ✨ Example
 
+```jro
 {
     "name": "DrakkZ",
     "age": 10,
@@ -42,6 +43,7 @@ The project already has:
     "active": true,
     "nothing": null
 }
+```
 
 JRO keeps the familiar structure of JSON while leaving room for features of its own.
 
@@ -49,6 +51,7 @@ JRO keeps the familiar structure of JSON while leaving room for features of its 
 
 🐍 Python
 
+```python
 import jro
 
 data = {
@@ -66,10 +69,13 @@ print(text)
 decoded = jro.loads(text)
 
 print(decoded == data)
+```
 
 Output:
 
+```text
 True
+```
 
 ---
 
@@ -77,12 +83,14 @@ True
 
 JRO supports single-line comments:
 
+```jro
 {
     // User information
     "name": "DrakkZ",
 
     "age": 10
 }
+```
 
 ---
 
@@ -105,7 +113,9 @@ JRO aims to provide:
 
 Install the development dependencies and run:
 
+```bash
 pytest
+```
 
 The project uses automated tests to verify the lexer, parser, encoder, decoder, errors, comments, and round-trip behavior.
 
@@ -113,6 +123,7 @@ The project uses automated tests to verify the lexer, parser, encoder, decoder, 
 
 📁 Project Structure
 
+```text
 jro/
 ├── jro/
 │   ├── __init__.py
@@ -131,6 +142,7 @@ jro/
 ├── .gitignore
 ├── LICENSE
 └── README.md
+```
 
 ---
 
@@ -138,7 +150,7 @@ jro/
 
 JRO is released under the MIT License.
 
-See "LICENSE" (LICENSE) for the full license text.
+See [LICENSE](LICENSE) for the full license text.
 
 ---
 
