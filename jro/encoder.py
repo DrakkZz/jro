@@ -4,8 +4,8 @@ JRO Encoder
 
 Converte estruturas Python em texto JRO.
 
-JRO 0.2.0
-JSON V2
+JRO 0.3.0
+JSON Reformulated Object
 """
 
 from __future__ import annotations
@@ -23,8 +23,10 @@ class Encoder:
         self,
         *,
         indent: int | None = None,
+        sort_keys: bool = False,
     ):
         self.indent = indent
+        self.sort_keys = sort_keys
 
     def encode(self, data: Any) -> str:
         """Converte dados Python em texto JRO."""
@@ -111,9 +113,17 @@ class Encoder:
         if not value:
             return "{}"
 
+        items_source = value.items()
+
+        if self.sort_keys:
+            items_source = sorted(
+                items_source,
+                key=lambda item: item[0],
+            )
+
         items = []
 
-        for key, item in value.items():
+        for key, item in items_source:
             if not isinstance(key, str):
                 raise EncoderError(
                     "As chaves de objetos JRO devem ser strings."
@@ -203,10 +213,14 @@ def dumps(
     data: Any,
     *,
     indent: int | None = None,
+    sort_keys: bool = False,
 ) -> str:
     """Converte dados Python em uma string JRO."""
 
-    return Encoder(indent=indent).encode(data)
+    return Encoder(
+        indent=indent,
+        sort_keys=sort_keys,
+    ).encode(data)
 
 
 def dump(
@@ -214,6 +228,7 @@ def dump(
     filename: str,
     *,
     indent: int | None = 4,
+    sort_keys: bool = False,
 ) -> None:
     """Salva dados Python em um arquivo JRO."""
 
@@ -226,5 +241,6 @@ def dump(
             dumps(
                 data,
                 indent=indent,
+                sort_keys=sort_keys,
             )
         )

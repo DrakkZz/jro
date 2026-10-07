@@ -1,8 +1,8 @@
 """
 Testes básicos da JRO.
 
-JRO 0.2.0
-JSON V2
+JRO 0.3.0
+JSON Reformulated Object
 """
 
 import jro
@@ -80,3 +80,18 @@ def test_nested_arrays():
     ]
 
     assert jro.loads(jro.dumps(data)) == data
+
+
+def test_dumps_sort_keys():
+    data = {
+        "z": 1,
+        "a": 2,
+        "m": 3,
+    }
+
+    result = jro.dumps(
+        data,
+        sort_keys=True,
+    )
+
+    assert result == '{"a":2,"m":3,"z":1}'
