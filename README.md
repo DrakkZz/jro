@@ -14,7 +14,7 @@ JRO is a JSON-inspired data format and Python library designed to be simple, rea
 
 🚧 JRO is currently under development.
 
-Current version: 0.2.0
+Current version: 0.3.0
 
 The project already has:
 
