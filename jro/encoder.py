@@ -25,19 +25,24 @@ class Encoder:
         indent: int | None = None,
         sort_keys: bool = False,
     ):
+        if indent is not None:
+            if isinstance(indent, bool) or not isinstance(indent, int):
+                raise TypeError("indent deve ser um inteiro ou None.")
+
+            if indent < 0:
+                raise ValueError("indent não pode ser negativo.")
+
+        if not isinstance(sort_keys, bool):
+            raise TypeError("sort_keys deve ser bool.")
+
         self.indent = indent
         self.sort_keys = sort_keys
 
     def encode(self, data: Any) -> str:
         """Converte dados Python em texto JRO."""
-
         return self._encode_value(data, 0)
 
-    def _encode_value(
-        self,
-        value: Any,
-        level: int,
-    ) -> str:
+    def _encode_value(self, value: Any, level: int) -> str:
         """Codifica um valor Python."""
 
         if value is None:
@@ -69,32 +74,33 @@ class Encoder:
         )
 
     def _encode_string(self, value: str) -> str:
-        """Codifica uma string."""
+        """Codifica uma string e escapa caracteres especiais."""
 
-        result = '"'
+        escapes = {
+            '"': '\\"',
+            "\\": "\\\\",
+            "\n": "\\n",
+            "\r": "\\r",
+            "\t": "\\t",
+            "\b": "\\b",
+            "\f": "\\f",
+        }
+
+        result = ['"']
 
         for char in value:
-            if char == '"':
-                result += '\\"'
-            elif char == "\\":
-                result += "\\\\"
-            elif char == "\n":
-                result += "\\n"
-            elif char == "\r":
-                result += "\\r"
-            elif char == "\t":
-                result += "\\t"
-            elif char == "\b":
-                result += "\\b"
-            elif char == "\f":
-                result += "\\f"
+            if char in escapes:
+                result.append(escapes[char])
+            elif ord(char) < 0x20:
+                result.append(f"\\u{ord(char):04x}")
             else:
-                result += char
+                result.append(char)
 
-        return result + '"'
+        result.append('"')
+        return "".join(result)
 
     def _encode_float(self, value: float) -> str:
-        """Codifica um número decimal."""
+        """Codifica um número decimal finito."""
 
         if not math.isfinite(value):
             raise EncoderError(
@@ -113,6 +119,12 @@ class Encoder:
         if not value:
             return "{}"
 
+        for key in value:
+            if not isinstance(key, str):
+                raise EncoderError(
+                    "As chaves de objetos JRO devem ser strings."
+                )
+
         items_source = value.items()
 
         if self.sort_keys:
@@ -124,20 +136,13 @@ class Encoder:
         items = []
 
         for key, item in items_source:
-            if not isinstance(key, str):
-                raise EncoderError(
-                    "As chaves de objetos JRO devem ser strings."
-                )
-
             encoded_key = self._encode_string(key)
             encoded_value = self._encode_value(
                 item,
                 level + 1,
             )
 
-            items.append(
-                (encoded_key, encoded_value)
-            )
+            items.append((encoded_key, encoded_value))
 
         if self.indent is None:
             return (
@@ -149,13 +154,8 @@ class Encoder:
                 + "}"
             )
 
-        spaces = " " * (
-            self.indent * (level + 1)
-        )
-
-        closing_spaces = " " * (
-            self.indent * level
-        )
+        spaces = " " * (self.indent * (level + 1))
+        closing_spaces = " " * (self.indent * level)
 
         lines = [
             f"{spaces}{key}: {item}"
@@ -173,29 +173,21 @@ class Encoder:
         value: list[Any] | tuple[Any, ...],
         level: int,
     ) -> str:
-        """Codifica uma lista como array JRO."""
+        """Codifica uma lista ou tupla como array JRO."""
 
         if not value:
             return "[]"
 
         items = [
-            self._encode_value(
-                item,
-                level + 1,
-            )
+            self._encode_value(item, level + 1)
             for item in value
         ]
 
         if self.indent is None:
             return "[" + ",".join(items) + "]"
 
-        spaces = " " * (
-            self.indent * (level + 1)
-        )
-
-        closing_spaces = " " * (
-            self.indent * level
-        )
+        spaces = " " * (self.indent * (level + 1))
+        closing_spaces = " " * (self.indent * level)
 
         lines = [
             f"{spaces}{item}"
@@ -232,11 +224,7 @@ def dump(
 ) -> None:
     """Salva dados Python em um arquivo JRO."""
 
-    with open(
-        filename,
-        "w",
-        encoding="utf-8",
-    ) as file:
+    with open(filename, "w", encoding="utf-8") as file:
         file.write(
             dumps(
                 data,
