@@ -3,8 +3,8 @@
 
 Transforma tokens JRO em estruturas Python.
 
-JRO 0.2.0
-JSON V2
+JRO 0.3.0
+JSON Reformulated Object
 """
 
 from __future__ import annotations

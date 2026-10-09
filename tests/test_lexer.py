@@ -1,8 +1,8 @@
 """
 Testes do lexer da JRO.
 
-JRO 0.2.0
-JSON V2
+JRO 0.3.0
+JSON Reformulated Object
 """
 
 import pytest
