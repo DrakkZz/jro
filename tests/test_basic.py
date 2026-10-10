@@ -140,3 +140,27 @@ def test_non_string_keys_rejected():
 def test_unsupported_type_rejected():
     with pytest.raises(jro.EncoderError):
         jro.dumps({ "valor": {1, 2, 3} })
+
+
+def test_circular_list_rejected():
+    data = []
+    data.append(data)
+
+    with pytest.raises(jro.EncoderError, match="Referência circular"):
+        jro.dumps(data)
+
+
+def test_circular_dict_rejected():
+    data = {}
+    data["self"] = data
+
+    with pytest.raises(jro.EncoderError, match="Referência circular"):
+        jro.dumps(data)
+
+
+def test_shared_reference_allowed():
+    shared = {"value": 1}
+
+    assert jro.dumps([shared, shared]) == (
+        '[{"value":1},{"value":1}]'
+    )

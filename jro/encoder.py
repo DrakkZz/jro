@@ -37,6 +37,7 @@ class Encoder:
 
         self.indent = indent
         self.sort_keys = sort_keys
+        self._active_containers: set[int] = set()
 
     def encode(self, data: Any) -> str:
         """Converte dados Python em texto JRO."""
@@ -64,10 +65,10 @@ class Encoder:
             return self._encode_float(value)
 
         if isinstance(value, dict):
-            return self._encode_object(value, level)
+            return self._encode_container(value, level)
 
         if isinstance(value, (list, tuple)):
-            return self._encode_array(value, level)
+            return self._encode_container(value, level)
 
         raise EncoderError(
             f"Tipo não suportado: {type(value).__name__}"
@@ -108,6 +109,26 @@ class Encoder:
             )
 
         return repr(value)
+
+    def _encode_container(self, value, level: int) -> str:
+        """Codifica containers e detecta referências circulares."""
+
+        container_id = id(value)
+
+        if container_id in self._active_containers:
+            raise EncoderError(
+                "Referência circular não é permitida em JRO."
+            )
+
+        self._active_containers.add(container_id)
+
+        try:
+            if isinstance(value, dict):
+                return self._encode_object(value, level)
+
+            return self._encode_array(value, level)
+        finally:
+            self._active_containers.remove(container_id)
 
     def _encode_object(
         self,
